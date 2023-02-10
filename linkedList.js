@@ -1,6 +1,8 @@
 class LinkedList {
+  #head;
+
   constructor() {
-    this.head = new Node();
+    this.#head = new Node();
   }
 
   /**
@@ -10,9 +12,9 @@ class LinkedList {
   append(value) {
     if (this._headEmpty()) {
       //Initialize head value
-      this.head.value = value;
+      this.#head.value = value;
     } else {
-      let tmp = this.head;
+      let tmp = this.#head;
 
       //Until tmp is last node in list
       while (tmp.next !== null) tmp = tmp.next;
@@ -29,10 +31,10 @@ class LinkedList {
   prepend(value) {
     if (this._headEmpty()) {
       //Initialize head value
-      this.head.value = value;
+      this.#head.value = value;
     } else {
       //Replace head of list with new node pointing to previous head
-      this.head = new Node(value, this.head);
+      this.#head = new Node(value, this.#head);
     }
   }
 
@@ -46,7 +48,7 @@ class LinkedList {
   at(index) {
     let i = 0;
 
-    let tmp = this.head;
+    let tmp = this.#head;
 
     //Stop at i or when end of list reached
     while (i < index && tmp.next !== null) {
@@ -62,11 +64,11 @@ class LinkedList {
    */
   pop() {
     //If head is the only element in the list
-    if (this.head.next === null) {
-      this.head.value = null;
+    if (this.#head.next === null) {
+      this.#head.value = null;
     } else {
       //Two pointers for current node being check and previous one
-      let cur = this.head;
+      let cur = this.#head;
       let prev;
 
       //While list has elements
@@ -86,7 +88,7 @@ class LinkedList {
    * @returns - if value is present in list
    */
   contains(value) {
-    let tmp = this.head;
+    let tmp = this.#head;
 
     //Check all values in list for a match
     while (tmp !== null) {
@@ -109,7 +111,7 @@ class LinkedList {
    */
   find(value) {
     let i = 0;
-    let tmp = this.head;
+    let tmp = this.#head;
 
     //Check all values in list for a match
     while (tmp !== null) {
@@ -132,7 +134,7 @@ class LinkedList {
    */
   toString() {
     let str = "";
-    let tmp = this.head;
+    let tmp = this.#head;
 
     while (tmp !== null) {
       str += `(${tmp.value}) --> `;
@@ -155,13 +157,13 @@ class LinkedList {
    */
   insertAt(value, index) {
     if (index <= 0) {
-      this.head = new Node(value, this.head.next);
+      this.#head = new Node(value, this.#head.next);
       return;
     }
 
     let i = 0;
     //Keep references for current node being checked and previous one
-    let cur = this.head;
+    let cur = this.#head;
     let prev;
 
     //Stop at i or when end of list reached
@@ -186,14 +188,14 @@ class LinkedList {
    */
   removeAt(index) {
     if (index <= 0) {
-      this.head = this.head.next;
+      this.#head = this.#head.next;
       return;
     }
 
     let i = 0;
 
     //Keep references for current node being checked and previous one
-    let cur = this.head;
+    let cur = this.#head;
     let prev;
 
     //Stop at i or when end of list reached
@@ -208,13 +210,14 @@ class LinkedList {
     cur = null;
   }
 
+  //Getters
+
   /**
-   * Getter
    * Gets the number of nodes in list
    */
   get size() {
     let items = 0;
-    let tmp = this.head;
+    let tmp = this.#head;
     while (tmp) {
       items++;
       tmp = tmp.next;
@@ -223,11 +226,15 @@ class LinkedList {
     return items;
   }
 
+  get head() {
+    return this.#head;
+  }
+
   /**
    * Returns the last node in list
    */
   get tail() {
-    let tmp = this.head;
+    let tmp = this.#head;
 
     while (tmp.next !== null) tmp = tmp.next;
 
@@ -241,18 +248,59 @@ class LinkedList {
    * @returns - if head is empty/null
    */
   _headEmpty() {
-    return this.head.value === null && this.head.next === null;
+    return this.#head.value === null && this.#head.next === null;
   }
 }
 
 class Node {
+  #value;
+  #next;
+
   //Default values for value and next are null
   constructor(value = null, next = null) {
-    this.value = value;
-    this.next = next;
+    this.#value = value;
+    this.#next = next;
+  }
+  //Setters
+
+  /**
+   * Sets value of node.
+   * 
+   * @param {Number} value - value of node
+   */
+  set value(value) {
+    if (isNaN(value)) {
+      this.#value = value;
+    } else {
+      throw new Error("Value must be a number.");
+    }
+  }
+
+  /**
+   * Sets next pointer of node.
+   * 
+   * @param {Node} next - next node pointer
+   */
+  set next(next) {
+    if (next === null || next instanceof Node) {
+      this.#next = next;
+    } else {
+      throw new Error("Next must be null or a Node object.");
+    }
+  }
+
+  //Getters 
+
+  get value() {
+    return this.#value;
+  }
+
+  get next() {
+    return this.#next;
   }
 }
 
+//Driver function for testing
 function main() {
   let list = new LinkedList();
 
@@ -284,6 +332,7 @@ function main() {
 
   list.removeAt(3);
   console.log(list.toString()); // (10) --> (5) --> (6) --> null
+  console.log(list.toString());
 }
 
 main();
